@@ -43,31 +43,24 @@ Designed for fast entry, clear visuals, and simple monthly tracking.
 - [ ] Add auth middleware to routes
 - [ ] Apply policy to restrict to authenticated user’s transactions only
 
-### 🖼️ Frontend (Vue)
+### 🖼️ Frontend
 
-- [ ] Create `Dashboard.vue` layout
-     - [ ] Display total + projected total at top
-     - [ ] Include AddTransaction and TransactionTable components
-- [ ] Create `AddTransaction.vue`
-     - [ ] Inline form for name, amount, date
-     - [ ] Submits to backend
-- [ ] Create `TransactionTable.vue`
-     - [ ] Loops through transactions
-     - [ ] Shows: date, name, amount, [edit], [delete]
-- [ ] Create `TransactionRow.vue`
-     - [ ] Inline editing for name, amount, date
-     - [ ] Emits save/cancel/delete
-- [ ] Mobile-first layout
-     - [ ] Centered, max-w-md container
-     - [ ] Large fonts + buttons
-     - [ ] Minimal animation, accessible for sensitive users
-- [ ] Optional dark mode toggle
-
-### 📊 Logic
-
+- [x] Optional dark mode toggle
+- [x] Mobile-first layout
+     - [x] Centered, max-w-md container
+     - [x] Large fonts + buttons
+     - [/] Minimal animation, accessible for sensitive users
+- [x] Total and projected spend
+- [/] Current month nav
+- [ ] Add transaction
+- [ ] Remove transaction
+- [ ] Edit Transaction
 - [ ] Total spent: sum of all transactions in current month
 - [ ] Projected total:
      - Avg daily spend × total days in month
      - Use `dayjs` or `date-fns` if needed
+
+### 🧪 Future
+
 - [ ] Ability to choose a different month for filtering
 - [ ] CSV export
