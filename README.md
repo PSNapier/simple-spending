@@ -32,16 +32,16 @@ Designed for fast entry, clear visuals, and simple monthly tracking.
 
 ### 🧱 Backend
 
-- [ ] Create `transactions` table migration
+- [x] Create `transactions` table migration
      - Fields: `id`, `user_id`, `name`, `amount`, `date`, `timestamps`
-- [ ] Create `Transaction` model
-- [ ] Setup API routes:
-     - [ ] GET: fetch transactions (current month only)
-     - [ ] POST: create transaction
-     - [ ] PUT: update transaction
-     - [ ] DELETE: delete transaction
-- [ ] Add auth middleware to routes
-- [ ] Apply policy to restrict to authenticated user’s transactions only
+- [x] Create `Transaction` model
+- [x] Setup API routes:
+     - [x] GET: fetch transactions (current month only)
+     - [/] POST: create transaction
+     - [/] PUT: update transaction
+     - [/] DELETE: delete transaction
+- [x] Add auth middleware to routes
+- [x] Apply policy to restrict to authenticated user’s transactions only
 
 ### 🖼️ Frontend
 
