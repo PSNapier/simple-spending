@@ -1,0 +1,12 @@
+{
+    "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss", "prettier-plugin-multiline-arrays"],
+    "tailwindFunctions": ["clsx", "cn"],
+    "tabWidth": 5,
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "singleAttributePerLine": true,
+    "htmlWhitespaceSensitivity": "css",
+    "multilineArraysWrapThreshold": 4,
+    "bracketSameLine": true
+}
