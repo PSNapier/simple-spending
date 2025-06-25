@@ -60,3 +60,14 @@ Designed to be used alongside a finance spreadsheet for fast spending entry, cle
 
 - [ ] Format copy/paste for sheets integration
 - [ ] CSV export
+
+### 🦗 Bugs
+
+- [ ] Wonky landing screen on big screens
+     - [ ] img is beside text
+     - [ ] darkmode text isn't implemented
+- [ ] Transaction list rehydtrating is laggy on mobile
+     - pre-fetch db data for a 3 month chunk?
+- [ ] Text is too small on mobile
+- [ ] Not enough feedback on mobile
+- [ ] Mathair tried swiping month on mobile
