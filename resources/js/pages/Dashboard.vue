@@ -12,10 +12,12 @@ import { type BreadcrumbItem } from '@/types';
 import {
      CheckCircleIcon,
      CheckIcon,
+     ChevronLeftIcon,
+     ChevronRightIcon,
      TrashIcon,
      XMarkIcon,
 } from '@heroicons/vue/24/outline';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 const csrfToken = document
      .querySelector('meta[name="csrf-token"]')
      ?.getAttribute('content');
@@ -28,17 +30,35 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 // DATE SELECTOR
-const selectedMonth = ref(new Date().getMonth() + 1); // 1 = January
+// const selectedMonth = ref(new Date().getMonth() + 1); // 1 = January
+const now = new Date();
+const selectedMonth = ref(now.getMonth()); // 0-indexed (Jan = 0)
+const selectedYear = ref(now.getFullYear());
+
+function goToPreviousMonth() {
+     if (selectedMonth.value === 0) {
+          selectedMonth.value = 11;
+          selectedYear.value--;
+     } else {
+          selectedMonth.value--;
+     }
+}
+
+function goToNextMonth() {
+     if (selectedMonth.value === 11) {
+          selectedMonth.value = 0;
+          selectedYear.value++;
+     } else {
+          selectedMonth.value++;
+     }
+}
 
 // TOTAL SPENT
-const monthlyTotal = computed(() => {
-     return transactions.value
-          .filter((tx) => {
-               const txMonth = new Date(tx.rawDate).getMonth() + 1;
-               return txMonth === selectedMonth.value;
-          })
-          .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
-});
+const monthlyTotal = computed(() =>
+     transactions.value.reduce((sum, tx) => {
+          return sum + Number(tx.amount || 0);
+     }, 0),
+);
 
 // PROJECTED TOTAL
 const projectedTotal = computed(() => {
@@ -60,7 +80,7 @@ const projectedTotal = computed(() => {
 // POPULATE TRANSACTION LIST
 const transactions = ref([]);
 
-onMounted(async () => {
+async function loadTransactions() {
      try {
           const res = await fetch('/spend', {
                headers: {
@@ -72,18 +92,30 @@ onMounted(async () => {
 
           const data = await res.json();
 
-          transactions.value = data.map((tx) => ({
-               ...tx,
-               editName: tx.name,
-               editAmount: parseFloat(tx.amount || 0).toFixed(0),
-               rawDate: tx.date,
-               editDate: formatDate(tx.date), // e.g. MM/DD
-               dirty: false,
-          }));
+          transactions.value = data
+               .filter((tx) => {
+                    const txDate = new Date(tx.date);
+                    return (
+                         txDate.getMonth() === selectedMonth.value &&
+                         txDate.getFullYear() === selectedYear.value
+                    );
+               })
+               .map((tx) => ({
+                    ...tx,
+                    editName: tx.name,
+                    editAmount: parseFloat(tx.amount || 0).toFixed(0),
+                    rawDate: tx.date,
+                    editDate: formatDate(tx.date),
+                    dirty: false,
+               }));
      } catch (error) {
           console.error('Error loading transactions:', error);
      }
-});
+}
+
+onMounted(loadTransactions);
+
+watch([selectedMonth, selectedYear], loadTransactions);
 
 function formatDate(dateStr) {
      // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -220,7 +252,7 @@ async function submitUpdate(tx) {
 <template>
      <AppLayout :breadcrumbs="breadcrumbs">
           <div
-               class="m-auto flex h-full w-full flex-1 flex-col gap-4 p-4 md:max-w-[500px]">
+               class="m-auto flex w-full flex-1 flex-col gap-4 p-4 md:max-w-[500px]">
                <div class="grid auto-rows-min gap-4">
                     <div
                          class="mt-2 grid grid-cols-2 items-end text-lg font-semibold">
@@ -259,17 +291,29 @@ async function submitUpdate(tx) {
                               </div>
                          </div>
                          <div
-                              class="flex h-full flex-col justify-end text-right text-6xl">
-                              {{
-                                   new Date().toLocaleString('default', {
-                                        month: 'long',
-                                   })
-                              }}
+                              class="flex h-full flex-row items-center justify-end text-right text-6xl">
+                              <ChevronLeftIcon
+                                   class="inline-block size-8 cursor-pointer align-middle opacity-50 hover:text-gray-500"
+                                   @click="goToPreviousMonth" />
+                              <span class="mx-2">
+                                   {{
+                                        new Date(
+                                             selectedYear,
+                                             selectedMonth,
+                                        ).toLocaleString('default', {
+                                             month: 'short',
+                                        })
+                                   }}
+                              </span>
+                              <ChevronRightIcon
+                                   class="inline-block size-8 cursor-pointer align-middle opacity-50 hover:text-gray-500"
+                                   @click="goToNextMonth" />
                          </div>
                     </div>
                     <Table class="text-lg">
                          <TableHeader>
-                              <TableRow>
+                              <TableRow
+                                   class="border-none bg-neutral-100 hover:bg-neutral-200">
                                    <TableHead
                                         ><TrashIcon class="size-4"
                                    /></TableHead>
@@ -285,39 +329,42 @@ async function submitUpdate(tx) {
                          </TableHeader>
                          <TableBody>
                               <!-- Add Transaction -->
-                              <TableCell></TableCell>
-                              <TableCell class="w-14">
-                                   <input
-                                        v-model="newTransaction.date"
-                                        class="w-full bg-transparent text-center text-lg outline-none" />
-                              </TableCell>
-                              <TableCell>
-                                   <input
-                                        v-model="newTransaction.name"
-                                        placeholder="Add..."
-                                        class="w-full bg-transparent text-lg outline-none" />
-                              </TableCell>
-                              <!-- Editable Amount -->
-                              <TableCell class="text-right">
-                                   <span class="relative left-2 opacity-30"
-                                        >$</span
-                                   >
-                                   <input
-                                        type="number"
-                                        step="5"
-                                        class="w-16 bg-transparent text-right focus:outline-none"
-                                        v-model.number="
-                                             newTransaction.amount
-                                        " />
-                              </TableCell>
-                              <TableCell>
-                                   <button
-                                        @click="submitTransaction"
-                                        class="cursor-pointer">
-                                        <CheckIcon
-                                             class="size-4 transition hover:text-green-600" />
-                                   </button>
-                              </TableCell>
+                              <TableRow>
+                                   <TableCell></TableCell>
+                                   <TableCell class="w-14">
+                                        <input
+                                             v-model="newTransaction.date"
+                                             class="w-full bg-transparent text-center text-lg outline-none" />
+                                   </TableCell>
+                                   <TableCell>
+                                        <input
+                                             v-model="newTransaction.name"
+                                             placeholder="Add..."
+                                             class="w-full bg-transparent text-lg outline-none" />
+                                   </TableCell>
+                                   <!-- Editable Amount -->
+                                   <TableCell class="text-right">
+                                        <span class="relative left-2 opacity-30"
+                                             >$</span
+                                        >
+                                        <input
+                                             type="number"
+                                             step="5"
+                                             class="w-16 bg-transparent text-right focus:outline-none"
+                                             placeholder="5"
+                                             v-model.number="
+                                                  newTransaction.amount
+                                             " />
+                                   </TableCell>
+                                   <TableCell>
+                                        <button
+                                             @click="submitTransaction"
+                                             class="cursor-pointer">
+                                             <CheckIcon
+                                                  class="size-4 transition hover:text-green-600" />
+                                        </button>
+                                   </TableCell>
+                              </TableRow>
 
                               <!-- List Transactions -->
                               <TableRow
@@ -377,4 +424,7 @@ async function submitUpdate(tx) {
                </div>
           </div>
      </AppLayout>
+     <footer class="w-full py-4 text-center text-sm text-gray-400">
+          &copy; Abature Studio {{ new Date().getFullYear() }}
+     </footer>
 </template>

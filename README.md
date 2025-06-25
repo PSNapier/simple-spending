@@ -50,10 +50,10 @@ Designed to be used alongside a finance spreadsheet for fast spending entry, cle
 - [x] Add transaction
 - [x] Remove transaction
 - [x] Edit Transaction
-- [ ] Total spent: sum of all transactions in current month
-- [ ] Projected total:
+- [x] Total spent:
+     - Sum of all transactions in current month
+- [x] Projected total:
      - Avg daily spend × total days in month
-     - Use `dayjs` or `date-fns` if needed
 - [/] Current month nav
 
 ### 🧪 Future
