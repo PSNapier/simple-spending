@@ -33,9 +33,9 @@ Designed to be used alongside a finance spreadsheet for fast spending entry, cle
 - [x] Create `Transaction` model
 - [x] Setup API routes:
      - [x] GET: fetch transactions (current month only)
-     - [/] POST: create transaction
-     - [/] PUT: update transaction
-     - [/] DELETE: delete transaction
+     - [x] POST: create transaction
+     - [x] PUT: update transaction
+     - [x] DELETE: delete transaction
 - [x] Add auth middleware to routes
 - [x] Apply policy to restrict to authenticated user’s transactions only
 
@@ -47,14 +47,14 @@ Designed to be used alongside a finance spreadsheet for fast spending entry, cle
      - [x] Large fonts + buttons
      - [/] Minimal animation, accessible for sensitive users
 - [x] Total and projected spend
-- [/] Current month nav
-- [ ] Add transaction
-- [ ] Remove transaction
-- [ ] Edit Transaction
+- [x] Add transaction
+- [x] Remove transaction
+- [x] Edit Transaction
 - [ ] Total spent: sum of all transactions in current month
 - [ ] Projected total:
      - Avg daily spend × total days in month
      - Use `dayjs` or `date-fns` if needed
+- [/] Current month nav
 
 ### 🧪 Future
 

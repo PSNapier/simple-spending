@@ -15,7 +15,7 @@ import {
      TrashIcon,
      XMarkIcon,
 } from '@heroicons/vue/24/outline';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 const csrfToken = document
      .querySelector('meta[name="csrf-token"]')
      ?.getAttribute('content');
@@ -26,6 +26,36 @@ const breadcrumbs: BreadcrumbItem[] = [
           href: '/dashboard',
      },
 ];
+
+// DATE SELECTOR
+const selectedMonth = ref(new Date().getMonth() + 1); // 1 = January
+
+// TOTAL SPENT
+const monthlyTotal = computed(() => {
+     return transactions.value
+          .filter((tx) => {
+               const txMonth = new Date(tx.rawDate).getMonth() + 1;
+               return txMonth === selectedMonth.value;
+          })
+          .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+});
+
+// PROJECTED TOTAL
+const projectedTotal = computed(() => {
+     const now = new Date();
+     const thisMonth = selectedMonth.value;
+     const thisYear = now.getFullYear();
+
+     const today = now.getDate();
+     const daysInMonth = new Date(thisYear, thisMonth, 0).getDate();
+
+     // Avoid division by zero
+     if (today === 0) return 0;
+
+     const avgPerDay = monthlyTotal.value / today;
+
+     return Math.round(avgPerDay * daysInMonth);
+});
 
 // POPULATE TRANSACTION LIST
 const transactions = ref([]);
@@ -46,6 +76,7 @@ onMounted(async () => {
                ...tx,
                editName: tx.name,
                editAmount: parseFloat(tx.amount || 0).toFixed(0),
+               rawDate: tx.date,
                editDate: formatDate(tx.date), // e.g. MM/DD
                dirty: false,
           }));
@@ -55,6 +86,7 @@ onMounted(async () => {
 });
 
 function formatDate(dateStr) {
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const [year, month, day] = dateStr.split('-');
      return `${Number(month)}/${Number(day)}`;
 }
@@ -190,15 +222,40 @@ async function submitUpdate(tx) {
           <div
                class="m-auto flex h-full w-full flex-1 flex-col gap-4 p-4 md:max-w-[500px]">
                <div class="grid auto-rows-min gap-4">
-                    <div class="mt-2 grid grid-cols-2 text-xl font-semibold">
-                         <div>
+                    <div
+                         class="mt-2 grid grid-cols-2 items-end text-lg font-semibold">
+                         <div class="flex flex-col justify-end gap-2">
                               <div class="flex flex-row gap-2">
-                                   <div>Total Spent:</div>
-                                   <div>$35</div>
+                                   <div>
+                                        Total Spent:
+                                        <span>
+                                             ${{
+                                                  monthlyTotal.toLocaleString(
+                                                       undefined,
+                                                       {
+                                                            minimumFractionDigits: 0,
+                                                            maximumFractionDigits: 2,
+                                                       },
+                                                  )
+                                             }}
+                                        </span>
+                                   </div>
                               </div>
                               <div class="flex flex-row gap-2">
-                                   <div>Projected Total:</div>
-                                   <div>$35</div>
+                                   <div>
+                                        Projected Total:
+                                        <span>
+                                             ${{
+                                                  projectedTotal.toLocaleString(
+                                                       undefined,
+                                                       {
+                                                            minimumFractionDigits: 0,
+                                                            maximumFractionDigits: 2,
+                                                       },
+                                                  )
+                                             }}
+                                        </span>
+                                   </div>
                               </div>
                          </div>
                          <div
