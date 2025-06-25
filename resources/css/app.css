@@ -11,6 +11,10 @@
      font-variant-caps: small-caps;
 }
 
+.flip {
+     transform: scaleX(-1);
+}
+
 @theme inline {
      --font-sans:
           Instrument Sans, ui-sans-serif, system-ui, sans-serif,

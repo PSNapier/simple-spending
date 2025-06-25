@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Spend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SpendController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
         return Spend::where('user_id', Auth::id())
@@ -46,11 +49,15 @@ class SpendController extends Controller
         return $spend;
     }
 
-    public function destroy(Spend $spend)
-    {
-        $this->authorize('delete', $spend);
-        $spend->delete();
+	public function destroy(Spend $spend) {
+	//     \Log::info('🔨 Entered SpendController@destroy');
+	//     \Log::info('Auth ID is: ' . auth()->id());
+	//     \Log::info('Spend user_id: ' . $spend->user_id);
 
-        return response()->noContent();
-    }
+	$this->authorize('delete', $spend);
+
+	$spend->delete();
+
+	return response()->noContent();
+	}
 }
