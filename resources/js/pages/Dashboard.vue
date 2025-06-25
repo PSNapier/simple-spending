@@ -62,19 +62,14 @@ const monthlyTotal = computed(() =>
 
 // PROJECTED TOTAL
 const projectedTotal = computed(() => {
-     const now = new Date();
-     const thisMonth = selectedMonth.value;
-     const thisYear = now.getFullYear();
-
      const today = now.getDate();
-     const daysInMonth = new Date(thisYear, thisMonth, 0).getDate();
 
      // Avoid division by zero
      if (today === 0) return 0;
 
      const avgPerDay = monthlyTotal.value / today;
 
-     return Math.round(avgPerDay * daysInMonth);
+     return Math.round(avgPerDay * 30);
 });
 
 // POPULATE TRANSACTION LIST
@@ -313,7 +308,7 @@ async function submitUpdate(tx) {
                     <Table class="text-lg">
                          <TableHeader>
                               <TableRow
-                                   class="border-none bg-neutral-100 hover:bg-neutral-200">
+                                   class="border-none bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
                                    <TableHead
                                         ><TrashIcon class="size-4"
                                    /></TableHead>
@@ -371,7 +366,7 @@ async function submitUpdate(tx) {
                                    v-for="tx in transactions"
                                    :key="tx.id">
                                    <!-- Delete Button -->
-                                   <TableCell>
+                                   <TableCell class="flex justify-center">
                                         <XMarkIcon
                                              class="size-4 cursor-pointer transition hover:text-red-500"
                                              @click="
