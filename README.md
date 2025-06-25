@@ -54,10 +54,9 @@ Designed to be used alongside a finance spreadsheet for fast spending entry, cle
      - Sum of all transactions in current month
 - [x] Projected total:
      - Avg daily spend × total days in month
-- [/] Current month nav
+- [x] Current month nav
 
 ### 🧪 Future
 
-- [ ] Ability to choose a different month for filtering
 - [ ] Format copy/paste for sheets integration
 - [ ] CSV export
