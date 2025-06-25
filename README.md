@@ -1,26 +1,22 @@
 # 💵 Simple Spending Tracker
 
 A mobile-first spending tracker built with Laravel 12, Vue 3, and Tailwind CSS.  
-Designed for fast entry, clear visuals, and simple monthly tracking.
+Designed to be used alongside a finance spreadsheet for fast spending entry, clear visuals, and simple monthly tracking.
 
 ## Features
 
-- ✅ Email login via Laravel Breeze (Vue starter kit)
+- ✅ Email login via Laravel
 - 📆 Track transactions (name, amount, date)
 - 📊 See total and projected spending for the current month
 - 📱 Mobile-first layout, large font/buttons for ease of use
 - 🧠 Clean inline editing — no popups or modals
-
----
 
 ## Tech Stack
 
 - **Laravel 12**
 - **Vue 3**
 - **TailwindCSS**
-- **MySQL or SQLite** (dev)
-
----
+- **MySQL**
 
 ## TODO
 
@@ -63,4 +59,5 @@ Designed for fast entry, clear visuals, and simple monthly tracking.
 ### 🧪 Future
 
 - [ ] Ability to choose a different month for filtering
+- [ ] Format copy/paste for sheets integration
 - [ ] CSV export
