@@ -14,10 +14,8 @@ class SpendController extends Controller
     public function index()
     {
         return Spend::where('user_id', Auth::id())
-            ->whereMonth('date', now()->month)
-            ->whereYear('date', now()->year)
-            ->orderBy('date', 'desc')
-            ->get();
+   		->orderBy('date', 'desc')
+    		->get();
     }
 
     public function store(Request $request)

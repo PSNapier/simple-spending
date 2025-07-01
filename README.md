@@ -59,7 +59,7 @@ Designed to be used alongside a finance spreadsheet for fast spending entry, cle
 ### 🧪 Future
 
 - [ ] Format copy/paste for sheets integration
-- [ ] CSV export
+- [ ] CSV import/export
 
 ### 🦗 Bugs
 

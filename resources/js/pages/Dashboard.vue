@@ -64,11 +64,17 @@ const monthlyTotal = computed(() =>
 const projectedTotal = computed(() => {
      const today = now.getDate();
 
-     // Avoid division by zero
+     if (
+          selectedMonth.value !== now.getMonth() ||
+          selectedYear.value !== now.getFullYear()
+     ) {
+          // If not the current month, return the monthly total
+          return monthlyTotal.value;
+     }
+
      if (today === 0) return 0;
 
      const avgPerDay = monthlyTotal.value / today;
-
      return Math.round(avgPerDay * 30);
 });
 
