@@ -14,34 +14,13 @@ const breadcrumbs: BreadcrumbItem[] = [
      },
 ];
 
-function getViewComponent(view: string) {
-     switch (view) {
-          case 'spending':
-               return SpendingView;
-          case 'income':
-               return IncomeView;
-          case 'wishlist':
-               return WishlistView;
-          default:
-               return SpendingView;
-     }
-}
-
-const views = ['spending', 'income', 'wishlist'];
+const views = [
+     { name: 'Spending', component: SpendingView },
+     { name: 'Income', component: IncomeView },
+     { name: 'Wishlist', component: WishlistView },
+];
 const currentViewIndex = ref(0);
-
 const currentView = computed(() => views[currentViewIndex.value]);
-
-const currentComponent = computed(() => {
-     switch (currentView.value) {
-          case 'income':
-               return IncomeView;
-          case 'wishlist':
-               return WishlistView;
-          default:
-               return SpendingView;
-     }
-});
 
 function nextView() {
      currentViewIndex.value = (currentViewIndex.value + 1) % views.length;
@@ -55,27 +34,23 @@ function prevView() {
 
 <template>
      <AppLayout :breadcrumbs="breadcrumbs">
-          <div class="">
-               <button
-                    @click="prevView"
-                    class="absolute top-1/2 left-2 z-10 -translate-y-1/2">
-                    <ChevronLeftIcon
-                         class="size-8 text-gray-500 hover:text-black" />
-               </button>
+          <button
+               @click="prevView"
+               class="absolute top-1/2 left-2 z-10 -translate-y-1/2">
+               <ChevronLeftIcon class="size-8 text-gray-500 hover:text-black" />
+          </button>
 
-               <div
-                    class="transition-all duration-300"
-                    :key="currentView">
-                    <component :is="currentComponent" />
-               </div>
+          <component
+               :is="currentView.component"
+               :key="currentView.name"
+               class="m-auto flex w-full flex-1 flex-col gap-4 p-4 md:max-w-[500px]" />
 
-               <button
-                    @click="nextView"
-                    class="absolute top-1/2 right-2 z-10 -translate-y-1/2">
-                    <ChevronRightIcon
-                         class="size-8 text-gray-500 hover:text-black" />
-               </button>
-          </div>
+          <button
+               @click="nextView"
+               class="absolute top-1/2 right-2 z-10 -translate-y-1/2">
+               <ChevronRightIcon
+                    class="size-8 text-gray-500 hover:text-black" />
+          </button>
      </AppLayout>
      <footer class="w-full py-4 text-center text-sm text-gray-400">
           &copy; Abature Studio {{ new Date().getFullYear() }}
