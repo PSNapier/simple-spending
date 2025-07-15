@@ -348,7 +348,7 @@ async function submitUpdate(tx) {
                          v-for="tx in transactions"
                          :key="tx.id">
                          <!-- Delete Button -->
-                         <TableCell class="flex justify-center">
+                         <TableCell>
                               <XMarkIcon
                                    class="size-4 cursor-pointer transition hover:text-red-500"
                                    @click="deleteTransaction(tx.id)" />
